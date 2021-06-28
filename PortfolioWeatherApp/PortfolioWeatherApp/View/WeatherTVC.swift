@@ -6,8 +6,11 @@
 //
 
 import UIKit
+import CoreLocation
 
 class WeatherTVC: UITableViewController {
+
+    var locationManager: CLLocationManager?
 
     let emptyCity = Weather()
 
@@ -18,6 +21,12 @@ class WeatherTVC: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        locationManager = CLLocationManager()
+        locationManager?.delegate = self
+        locationManager?.requestWhenInUseAuthorization()
+        locationManager?.requestLocation()
+
         addCitiesToArray()
 
         if weatherArray.isEmpty {
@@ -42,7 +51,6 @@ class WeatherTVC: UITableViewController {
     }
 
     // MARK: - Table view data source
-
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
         return weatherArray.count
@@ -66,16 +74,12 @@ class WeatherTVC: UITableViewController {
         destinationVC.weatherModel = cityWeather
         present(destinationVC, animated: true)
     }
-    
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if segue.identifier == "show" {
-//
-//            guard let indexPath = tableView.indexPathForSelectedRow else { return }
-//
-//            let cityWeather = weatherArray[indexPath.row]
-//            let destinationVC = segue.destination as! WeatherViewController
-//            destinationVC.weatherModel = cityWeather
-//        }
-//    }
 }
+// MARK: - Extensions
+extension WeatherTVC: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    }
 
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+    }
+}
